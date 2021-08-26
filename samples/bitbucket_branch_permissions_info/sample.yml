@@ -1,0 +1,34 @@
+---
+- name: Retrieve branch permissions
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Retrieve branch permissions for the supplied repository
+    esp.bitbucket.bitbucket_branch_permissions_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO
+      repository: bar   
+      validate_certs: no
+      return_content: yes
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Retrieve branch permissions for the supplied project
+    esp.bitbucket.bitbucket_branch_permissions_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO    
+      validate_certs: no
+      return_content: yes
+    register: _result
+
+  - debug:
+      var: _result
+

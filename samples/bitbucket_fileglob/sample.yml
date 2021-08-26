@@ -1,0 +1,35 @@
+---
+- name: Retrieve a list of files from particular repository of a Bitbucket Server
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Display paths of all files in a repository - returns a true list
+    ansible.builtin.debug:
+      msg: "{{ lookup('esp.bitbucket.bitbucket_fileglob', '.+',
+              project_key='FOO', repository='bar', validate_certs='no', 
+              username='SVCxxxxxx', password='secret', wantlist=True) }}"  
+
+  - name: Display paths of all files from a repository that end specific way - returns a string list of paths joined by commas
+    ansible.builtin.debug:
+      msg: "{{ lookup('esp.bitbucket.bitbucket_fileglob', '.+\\.yml$', '.+\\.json$', '.+\\.txt$',
+              project_key='FOO', repository='bar', validate_certs='no', 
+              username='SVCxxxxxx', password='secret') }}"  
+
+  - name: Display paths of all files with 'baz' in their names in develop branch and with the supplied grep pattern in the files content - returns a true list
+    ansible.builtin.debug:
+      msg: "{{ lookup('esp.bitbucket.bitbucket_fileglob', 'baz', grep='hello.+world',
+              project_key='FOO', repository='bar', at='develop', validate_certs='no', 
+              username='SVCxxxxxx', password='secret', wantlist=True) }}"  
+
+  - name: Add a line to a report file for each file found in the specified directories on Bitbucket repository
+    ansible.builtin.lineinfile:
+      path: /tmp/report.txt
+      line: '{{ item }} file found in Bitbucket Server repository'
+      create: yes
+    loop: "{{ query('esp.bitbucket.bitbucket_fileglob', '^/path/to/dir1/', '^/path/to/dir2/',
+              project_key='FOO', repository='bar', at='master', validate_certs='no', 
+              token='MjA2M...hqP58' ) }}"
+    loop_control:
+      label: "[Processing {{ item }} file from Bitbucket Server ..]"

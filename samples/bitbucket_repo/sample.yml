@@ -1,0 +1,35 @@
+---
+- name: Create and delete Bitbucket repository
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Create Bitbucket repository
+    esp.bitbucket.bitbucket_repo:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+      state: present
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Delete Bitbucket repository
+    esp.bitbucket.bitbucket_repo:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+      state: absent
+    register: _result
+
+  - debug:
+      var: _result
+         

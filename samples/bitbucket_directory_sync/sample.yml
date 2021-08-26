@@ -1,0 +1,16 @@
+---
+- name: Synchronise Bitbucket Server User Directories
+  hosts: localhost
+  become: false
+
+  tasks:
+         
+  - name: Synchronise User Directories
+    esp.bitbucket.bitbucket_directory_sync:
+      username: SVCxxxxxx
+      password: secret
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result

@@ -1,0 +1,18 @@
+---
+- name: Get information about Webhooks on Bitbucket repository
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Get webhooks on repository
+    esp.bitbucket.bitbucket_webhook_info:
+      username: SVCxxxxxx
+      password: secret
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result

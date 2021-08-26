@@ -1,0 +1,19 @@
+---
+- name: Update the default branch of a repository
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Set branch as default
+    esp.bitbucket.bitbucket_default_branch:
+      username: SVCxxxxxx
+      password: secret
+      repository: bar
+      project_key: FOO
+      validate_certs: no
+      branch: "develop"
+    register: _result
+
+  - debug:
+      var: _result

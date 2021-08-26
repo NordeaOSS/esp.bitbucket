@@ -1,0 +1,29 @@
+---
+- name: Create and initialize locally Bitbucket repository
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Create empty repository on Bitbucket
+    esp.bitbucket.bitbucket_repo:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+      state: present
+    register: _result
+  
+  - debug:
+      var: _result
+      
+  - name: Initialize git repository
+    esp.bitbucket.git_init:
+      path: /tmp/bar
+      force: no
+    register: _result
+
+  - debug:
+      var: _result
+

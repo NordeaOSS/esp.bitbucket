@@ -1,0 +1,56 @@
+---
+- name: Manage branch permissions
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Create restrictions for the supplied branch
+    esp.bitbucket.bitbucket_branch_permissions:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO    
+      repository: bar  
+      branch_name: master
+      restrictions:
+        - prevent: deletion 
+          exemptions:
+            groups: []
+            users: [ john ]
+            access_keys: []        
+        - prevent: rewriting history
+        - prevent: 'changes without a pull request'
+        - prevent: 'all changes'        
+      state: present
+      validate_certs: no
+      return_content: yes
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Delete restrictions for the supplied branch
+    esp.bitbucket.bitbucket_branch_permissions:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO    
+      repository: bar  
+      branch_name: master
+      restrictions:
+        - prevent: 'deletion'
+          exemptions:
+            groups: []
+            users: [ john ]
+            access_keys: []        
+        - prevent: 'rewriting history'
+        - prevent: 'changes without a pull request'
+        - prevent: 'all changes'
+      state: absent
+      validate_certs: no
+      return_content: yes
+    register: _result
+
+  - debug:
+      var: _result

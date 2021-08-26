@@ -1,0 +1,34 @@
+---
+- name: Manage Bitbucket repository permissions
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Set REPO_WRITE permission level for the specified repository to jsmith user
+    esp.bitbucket.bitbucket_repo_permissions:  
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO
+      repository: bar       
+      user: jsmith
+      permission: REPO_WRITE
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+      
+  - name: Revoke all permissions for the specified repository from a group
+    esp.bitbucket.bitbucket_repo_permissions:
+      token: 'MjA2..<your_access_token>.qP58'
+      project_key: FOO
+      repository: bar       
+      group: dev-group
+      permission: ''
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+      

@@ -1,0 +1,37 @@
+---
+- name: Retrieve a list of files from particular repository of a Bitbucket Server
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Retrieve paths of all files in a repository in develop branch that end specific way
+    esp.bitbucket.bitbucket_find:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      repository: bar
+      project_key: FOO
+      at: develop
+      patterns:
+        - '.+\.yml$'
+        - '.+\.json$'
+      validate_certs: no
+    register: _result
+  
+  - debug:
+      var: _result
+
+  - name: Retrieve paths of all files with 'baz' in their names in develop branch and with the supplied grep pattern in the files content
+    esp.bitbucket.bitbucket_find:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      repository: bar
+      project_key: FOO
+      patterns: baz
+      at: develop
+      grep: 'hello.+?world' 
+      validate_certs: no
+    register: _result
+  
+  - debug:
+      var: _result

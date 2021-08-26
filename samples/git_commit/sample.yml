@@ -1,0 +1,39 @@
+---
+- name: Create,initialize locally Bitbucket repository and commit changes
+  hosts: localhost
+  become: false
+
+  tasks:
+      
+  - name: Initialize git repository
+    esp.bitbucket.git_init:
+      path: /tmp/bar
+      force: no
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name:
+    ansible.builtin.file:
+      path: "/tmp/bar/{{ item }}"
+      state: touch
+      mode: u=rw,g=r,o=r
+    with_items:
+      - test_file1.txt
+      - test_file2.txt
+      - test_file3.txt
+
+  - name: Commit changes to the local repository, add a tag
+    esp.bitbucket.git_commit:
+      repository: bar
+      msg: "Commit message"
+      path: /tmp/bar
+      committer:
+        name: jsmith
+        email: jsmith@example.com
+      tag: '0.0.1'
+    register: _result
+
+  - debug:
+      var: _result

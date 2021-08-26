@@ -1,0 +1,33 @@
+---
+- name: Retrieve branches information for the supplied project and repository
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Retrieve all branches
+    esp.bitbucket.bitbucket_branch_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      repository: bar
+      project_key: FOO
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Retrieve the branches matching the supplied branch filters
+    esp.bitbucket.bitbucket_branch_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      repository: bar
+      project_key: FOO
+      validate_certs: no
+      branch: [ develop, feature ]
+    register: _result
+
+  - debug:
+      var: _result

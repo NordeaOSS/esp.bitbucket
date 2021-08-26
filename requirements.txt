@@ -1,0 +1,3 @@
+### List of python packages required by collection
+pathlib
+gitpython

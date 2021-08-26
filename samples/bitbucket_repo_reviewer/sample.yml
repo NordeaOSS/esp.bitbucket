@@ -1,0 +1,29 @@
+---
+- name: Create and Delete default reviewers on Bitbucket repository
+  hosts: localhost
+  become: false
+
+  tasks:
+  - name: Define default reviewers for FOO project , TEST repository and master branch
+    esp.bitbucket.bitbucket_repo_reviewer:
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO
+      repository: TEST
+      validate_certs: no
+      state: present
+      branch: "master"
+      reviewers: [ m00001 ]
+      approvals: 1 #one approval required
+    register: ebi_pr_reviewer_output
+
+  - name: Delete default reviewers for FOO project, TEST repository
+    esp.bitbucket.bitbucket_repo_reviewer:
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO
+      repository: TEST
+      validate_certs: no
+      state: absent
+      branch: "master"
+    register: ebi_pr_reviewer_output

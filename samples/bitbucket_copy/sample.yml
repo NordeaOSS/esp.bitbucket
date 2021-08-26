@@ -1,0 +1,41 @@
+---
+- name: Copy files to Bitbucket Server
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Copy file to Bitbucket
+    esp.bitbucket.bitbucket_copy:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      repository: bar
+      project_key: FOO
+      src: /tmp/baz.yml
+      dest: path/to/baz.yml
+      message: File updated using bitbucket_copy module
+      branch: master
+      validate_certs: no
+      force_basic_auth: yes
+    register: _result
+  
+  - debug:
+      var: _result
+
+  - name: Copy file to Bitbucket using inline content
+    esp.bitbucket.bitbucket_copy:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      repository: bar
+      project_key: FOO
+      content: '# Hello world'
+      dest: path/to/baz.yml
+      message: File updated using bitbucket_copy module
+      branch: master
+      validate_certs: no
+      force_basic_auth: yes
+    register: _result
+  
+  - debug:
+      var: _result
+

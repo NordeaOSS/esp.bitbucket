@@ -1,0 +1,24 @@
+---
+- name: Retrieve details on application links
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Retrieve details on all application links
+    esp.bitbucket.bitbucket_application_link_info:
+      #token: 'MjA2..<your_access_token>.qP58
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      applink:
+        - '*'
+        #- Terraform Enterprise (Cloud)
+        #- 227dd1d7-f6d6-34a5-b046-5663fb518691
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+
+
+

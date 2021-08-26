@@ -1,0 +1,59 @@
+---
+- name: Clone remote repository and push locall changes to Bitbucket repository
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Clone repository
+    esp.bitbucket.bitbucket_clone:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      repository: bar
+      project_key: FOO
+      branch: develop
+      path: /tmp/bar
+      force: yes
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Create new files
+    ansible.builtin.file:
+      path: "/tmp/bar/{{ item }}"
+      state: touch
+      mode: u=rw,g=r,o=r
+    with_items:
+      - test_fe1.txt
+      - test_fe2.txt
+      - test_fe3.txt
+
+  - name: Commit changes to the local repository
+    esp.bitbucket.git_commit:
+      repository: bar
+      message: "Commit message"
+      path: /tmp/bar
+      committer:
+        name: jsmith
+        email: jsmith@example.com
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Push changes to the remote repository
+    esp.bitbucket.bitbucket_push:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      repository: bar
+      project_key: FOO
+      path: /tmp/bar
+      commit: no 
+      delete: no
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result

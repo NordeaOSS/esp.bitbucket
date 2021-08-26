@@ -1,0 +1,31 @@
+---
+- name: Retrieve project information from Bitbucket Server
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Retrieve all projects
+    esp.bitbucket.bitbucket_project_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: [ '*' ]
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Retrieve the projects matching the supplied project_key filter
+    esp.bitbucket.bitbucket_project_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: [ FOO, BAR ]
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+

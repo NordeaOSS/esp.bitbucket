@@ -1,0 +1,29 @@
+---
+- name: Read file contents from Bitbucket Server
+  hosts: localhost
+  become: false
+
+  tasks:
+         
+  - name: Read file contents from Bitbucket Server
+    esp.bitbucket.bitbucket_slurp:
+      username: SVCxxxxxx
+      password: secret
+      repository: bar
+      project_key: FOO
+      path: 'path/to/baz.yml'
+      at: develop
+      validate_certs: no
+      return_content: yes
+      force_basic_auth: yes
+    register: _result
+
+  - debug:
+      var: _result
+
+  - debug:
+      msg: "{{ _result['content'] | b64decode }}"
+
+  - debug:
+      msg: "{{ _result['content'] | b64decode | from_yaml }}"
+

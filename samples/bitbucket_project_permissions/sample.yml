@@ -1,0 +1,32 @@
+---
+- name: Manage Bitbucket project permissions
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Set PROJECT_WRITE permission level for the specified project to jsmith user
+    esp.bitbucket.bitbucket_project_permissions:  
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO      
+      user: jsmith
+      permission: PROJECT_WRITE
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+      
+  - name: Revoke all permissions for the specified project from a group
+    esp.bitbucket.bitbucket_project_permissions:
+      token: 'MjA2..<your_access_token>.qP58'
+      project_key: FOO      
+      group: dev-group
+      permission: ''
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+      

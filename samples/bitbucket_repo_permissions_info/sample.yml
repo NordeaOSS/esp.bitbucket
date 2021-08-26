@@ -1,0 +1,33 @@
+---
+- name: Retrieve Bitbucket repository permissions information
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Retrieve Bitbucket repository permissions information
+    esp.bitbucket.bitbucket_repo_permissions_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO
+      repository: bar
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Retrieve Bitbucket repository permissions, only group or user names containing the supplied filter strings will be returned
+    esp.bitbucket.bitbucket_repo_permissions_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO
+      repository: bar
+      filters: [ admin, dev ]
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result

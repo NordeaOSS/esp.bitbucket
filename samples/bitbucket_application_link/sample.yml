@@ -1,0 +1,64 @@
+---
+- name: Manage application links
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Create application link
+    esp.bitbucket.bitbucket_application_link:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      applink:
+        name: 'Terraform (my-org)'
+        rpcUrl: https://terraform.example.com/app/my-org
+        displayUrl: https://terraform.example.com/app/my-org
+        key: "de00c96434cf2b31d3b3e3164391091c"
+        publicKey: |
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0E6OBvxPXTQlyQ8IBIP7
+          4fcDRRycJt8Ysg57jhDPe4JV+MuHBANG43PRUxJd1PxjOgcwEZOwRDa1I7XeouGm
+          ZTs8XfcCMrBMn6FXRiywkXYJDe2BjZFIq9v6yEsbu4WO5CuL+fkPFccJHaU41w7V
+          Dj2dn9PHHtNiEFmTbqu2y6Eb5tvhoIdK633zgKs3fZiEuD4+i9yOSVjkye2z53K8
+          vTu4JH5GT80LTY8pC/Z2Jj8PcRexEvXYe5y3l1Z2gQy8xoN/5/Dmb6Bcd+aXfhPb
+          Gzr9C9mYr5zh15Rd7ygubYT1uKPTnQEuQMZpki9rsS3cKEYGyIX6mFLJdpZHK7hL
+          2QIDAQAB
+          -----END PUBLIC KEY-----        
+      state: present
+      validate_certs: no
+    register: _result_create
+
+  - debug:
+      var: _result_create
+
+  - name: Retrieve details on all application links
+    esp.bitbucket.bitbucket_application_link_info:
+      #token: 'MjA2..<your_access_token>.qP58
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      applink:
+        - '*'
+      validate_certs: no
+    register: _result_all
+
+  - debug:
+      var: _result_all
+
+  - name: Delete application link (supplied by name or ID)
+    esp.bitbucket.bitbucket_application_link:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      applink:
+        name: Terraform (my-org)
+        #id: "{{ _result_create.json.id }}"
+      state: absent
+      validate_certs: no
+    register: _result
+    tags:
+      - applink_delete
+
+  - debug:
+      var: _result
+    tags:
+      - applink_delete
+

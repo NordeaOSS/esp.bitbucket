@@ -1,0 +1,39 @@
+---
+- name: Create and delete Bitbucket project
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Create Bitbucket project
+    esp.bitbucket.bitbucket_project:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO
+      project_name: A new Bitbucket project
+      description: |
+          This is a new Bitbucket project.
+      #avatar: "{{ lookup('file', 'avatar.png', errors='ignore') | b64encode }}"  # (optional) Project avatar
+      validate_certs: no
+      state: present
+      return_content: yes
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Delete Bitbucket project
+    esp.bitbucket.bitbucket_project:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      project_key: FOO
+      validate_certs: no
+      state: absent
+      return_content: yes
+    register: _result
+
+  - debug:
+      var: _result
+   

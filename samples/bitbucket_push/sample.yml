@@ -1,0 +1,57 @@
+---
+- name: Create,initialize locally Bitbucket repository and push changes to remote repository
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Create empty repository on Bitbucket
+    esp.bitbucket.bitbucket_repo:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+      state: present
+    register: _result
+  
+  - debug:
+      var: _result
+
+  - name: Initialize git repository
+    esp.bitbucket.git_init:
+      path: /tmp/bar
+      force: no
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Create new files
+    ansible.builtin.file:
+      path: "/tmp/bar/{{ item }}"
+      state: touch
+      mode: u=rw,g=r,o=r
+    with_items:
+      - test_file1.txt
+      - test_file2.txt
+      - test_file3.txt
+
+  - name: Commit and push changes to the remote repository
+    esp.bitbucket.bitbucket_push:
+      username: '{{ bitbucket_username }}'
+      password: '{{ bitbucket_password }}'
+      repository: bar
+      project_key: FOO
+      msg: "Commit message"
+      path: /tmp/bar
+      commit: yes 
+      committer:
+        name: jsmith
+        email: jsmith@example.com
+      delete: no
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result

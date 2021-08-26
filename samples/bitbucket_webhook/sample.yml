@@ -1,0 +1,22 @@
+---
+- name: Create Webhook on Bitbucket repository
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Create webhook on repository
+    esp.bitbucket.bitbucket_webhook:
+      username: SVCxxxxxx
+      password: secret
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+      state: present
+      webhook_name: "wh_test"
+      webhook_url: "https://jenkins.example.com/bitbucket-hook/"
+      event: "repo:refs_changed,repo:modified"
+    register: _result
+
+  - debug:
+      var: _result

@@ -1,0 +1,32 @@
+---
+- name: Retrieve repositories information for the supplied project
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Retrieve all repositories
+    esp.bitbucket.bitbucket_repo_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      repository: [ '*' ]
+      project_key: FOO
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result
+
+  - name: Retrieve the repositories matching the supplied repository filter
+    esp.bitbucket.bitbucket_repo_info:
+      #token: 'MjA2..<your_access_token>.qP58'
+      username: SVCxxxxxx
+      password: secret
+      repository: [ bar, baz ]
+      project_key: FOO
+      validate_certs: no
+    register: _result
+
+  - debug:
+      var: _result

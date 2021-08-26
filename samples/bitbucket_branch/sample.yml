@@ -1,0 +1,22 @@
+---
+- name: Create branch on remote Bitbucket repository
+  hosts: localhost
+  become: false
+
+  tasks:
+
+  - name: Create branch develop from master
+    esp.bitbucket.bitbucket_branch:
+      username: SVCxxxxxx
+      password: secret
+      repository: bar
+      project_key: FOO
+      validate_certs: no
+      state: present
+      branch: develop
+      from_branch: "master"
+      is_default: yes
+    register: _result
+
+  - debug:
+      var: _result

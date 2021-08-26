@@ -1,0 +1,62 @@
+---
+- name: Create, Get information and Delete pull requests  on Bitbucket repository
+  hosts: localhost
+  become: false
+
+  tasks:
+  - name: Create pull request on repository
+    esp.bitbucket.bitbucket_pull_request:
+      username: SVCxxxxxx
+      password: secret
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+      state: present
+      title: "Test pull2"
+      from_branch: "pull_test2"
+      to_branch: "master"
+      reviewers: [ m00001 ]
+    register: ebi_pull_output
+
+  - name: Create pull request on repository
+    esp.bitbucket.bitbucket_pull_request:
+      username: SVCxxxxxx
+      password: secret
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+      state: present
+      title: "Test pull"
+      from_branch: "pull_test"
+      to_branch: "master"
+      reviewers: [ m00001, m00002 ]
+    register: ebi_pull_output
+  
+  - debug:
+      var: ebi_pull_output
+
+  - name: Get pull requests on repository
+    esp.bitbucket.bitbucket_pull_request_info:
+      username: SVCxxxxxx
+      password: secret
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+    register: ebi_pull_info_output
+
+  - debug:
+      var: ebi_pull_info_output
+
+  - name: Delete pull request on repository
+    esp.bitbucket.bitbucket_pull_request:
+      username: SVCxxxxxx
+      password: secret
+      repository: bar  # alias: name
+      project_key: FOO
+      validate_certs: no
+      state: absent
+      from_branch: "pull_test2"
+      to_branch: "master"
+    register: ebi_pull_output
+    with_items:
+      - "{{ ebi_pull_info_output.json }}"
